@@ -1,18 +1,64 @@
 #!/bin/bash
 
-########
-# VARS #
-########
-Y1=55 #elevation
-INC=11 #number to increment by
-INT=0.5 #time to sleep between iterations
-usage="subway.sh <server name> <usrname> <horz|vert> <start> <stop> <center> <altitude>"
+#########
+# ABOUT #
+#########################################################################################
+# This script is used to automate the construction of two-lane powered subway rail lines.
+# It accepts arguments for server name, player to run as, horizontal axis, start block,  
+# stop block, center block, and floor altitude.                                          
+
+
+###########
+# VERSION #
+#########################################################################
+#
+# v0.1 - Initial proof of concept. This version will echo out commands   
+#        rather than stuffing them into the screen session. It currently 
+#        only places powered rails and lighting in an existing shaft.    
+#        Full construction will be automated after initial testing is    
+#        complete.                                                        
+#
+
+
+use="
+subway.sh <screen session> <usrname> <horz|vert> <start> <stop> <center> <altitude>
+
+<screen session> This required argument determines which screen session to send commands to.
+
+<username>       This required argument determines which user to run as. 
+                 This player must have acccess to /setblock and /tp
+                 
+<horz|vert>      This required argument determines whether the subway line will run on the X or Z axis.
+
+<start>          This required argument is an integer for the column (Z) or file (X) to start at.
+
+<stop>           This required argument is an integer for the column (Z) or file (X) to end at.
+
+<center>         This required agrument is an integer for column (Z) or file (X) that runs between the lanes.
+
+<altitude>       This optional argument sets the Y layer to use for the floor of the line.
+                 If this parameter is not set, the line will run at the default value in the script file config.
+"
+
+##########
+# CONFIG #
+##########
+
+# Floor elevation default (used if altitued argument is not given)
+Y1=55 
+
+# Number to increment by. This determines the spacing between powered rails.
+INC=11
+
+# Time to sleep between iterations. Higher numbers result in slower construction. 
+# Setting this too low may result in server errors, broken lines, or other problems.
+INT=0.5 
 
 ###########
 # EXECUTE #
 ###########
 
-## Process args ##
+## Process args
 if [ "$#" -lt "6" ]; then
   echo -en "Too few arguments.\n$usage" >&2
   exit 1
